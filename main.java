@@ -44,7 +44,7 @@ public class main {
                     "any other key to quit): ");
             method = input.next().charAt(0);
             if (method == 'A' ||method == 'a'){
-                aStarSolver(b);
+                aStarSolver(b, goal);
 
             }
             else if (method == 'B' || method == 'b'){
@@ -57,10 +57,49 @@ public class main {
             e.printStackTrace();
         }
 
-
     }
+    static void aStarSolver(Board initial, int[][] goal){
+        PriorityQueue<Board> pq = new PriorityQueue<>(new mhPrioCmp());
+        HashMap<Integer, Board> gameTree = new HashMap<>();
+        List<Board> n;
+        String tempStr;
+        Scanner input = new Scanner(System.in);
+        int quit = 0;
+        int tempInt;
+        int count = 0;
+        int moves = 0;
+        int [][] currentState = new int[initial.dimension()][initial.dimension()];
 
-    static void aStarSolver(Board initial){
+        pq.add(initial);
+            while (!Arrays.deepEquals(currentState, goal)) {
+                initial = pq.poll();
+                if (gameTree.containsKey(moves - 1)) {
+                    tempStr = gameTree.get(moves-1).toString();
+                    //System.out.println(tempStr);
+                    if (gameTree.get(moves - 1).toString() == initial.toString()) {
+                        continue;
+                    }
+                }
+                System.out.println(initial.toString());
+                tempStr = initial.toString();
+                tempStr = tempStr.replace("\n", "");
+                tempStr = tempStr.replace(" ", "");
+                for (int i = 0; i < initial.dimension(); i++) {
+                    for (int j = 0; j < initial.dimension(); j++) {
+                        tempInt = Character.getNumericValue(tempStr.charAt(count));
+                        currentState[i][j] = tempInt;
+                        count++;
+                    }
+                }
+                count = 0;
+                moves++;
+                gameTree.put(moves, new Board(currentState, goal));
+                n = (List<Board>) initial.neighbors(moves);
+                pq.addAll(n);
+                //input.nextLine();
+        }
+
+
 
     }
     static void divAndConqSolver (Board initial){
