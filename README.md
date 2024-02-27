@@ -12,3 +12,5 @@ Slide puzzles read from .txt files, formatted like this
 the first number representing the size of the puzzle, and the zero in the grid representing the empty space of the puzzle.
 
 Assignment adapted from https://coursera.cs.princeton.edu/algs4/assignments/8puzzle/specification.php
+
+"Divide and Conquer" Strategy from this site: https://www.kopf.com.br/kaplof/how-to-solve-any-slide-puzzle-regardless-of-its-size/#google_vignette)
