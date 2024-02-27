@@ -1,21 +1,26 @@
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 public class Board{
-    private int[][] tiles;
+    int[][] tiles;
     private int size;
     private int[][] goal;
-    private int mhPrio;
 
     //constructor
     public Board(int[][] tiles, int[][] goal){
         this.tiles = tiles;
         this.size = tiles.length;
         this.goal = goal;
-        this.mhPrio = this.manhattan();
 
+    }
+
+    public boolean equals(Board b1, Board b2) {
+        boolean eq = false;
+        if (b1.equals(b2)){
+            eq = true;
+        }
+        return eq;
     }
 
     // string representation of this board
@@ -29,12 +34,12 @@ public class Board{
         }
         return result;
     }
-    public int getMHPrio(){
-        return mhPrio;
-    }
-    public int setMHPrio(int moves){
-        mhPrio = manhattan() + moves;
-        return mhPrio;
+    public boolean checkEQ(Board b1, Board b2){
+        boolean eq = false;
+        if (Arrays.deepEquals(b1.tiles, b2.tiles)){
+            eq = true;
+        }
+        return eq;
     }
 
     // board dimension n
@@ -83,18 +88,20 @@ public class Board{
 
         return manhattan;
      }
+     //determines the manhattan values of the top of the board
+
 
      // is this board the goal board?
      public boolean isGoal(){
         boolean isGoal = false;
-        if(tiles.equals(goal)){
+        if(Arrays.deepEquals(tiles, goal)){
             isGoal = true;
         }
         return isGoal;
      }
 
      // all neighboring boards
-     public Iterable<Board> neighbors(int moves){
+     public Iterable<Board> neighbors(){
         List<Board> neighbors = new ArrayList<>();
         int xpos = 0;
         int ypos = 0;
@@ -123,7 +130,6 @@ public class Board{
             n1[xpos][ypos] = n1[xpos-1][ypos];
             n1[xpos-1][ypos] = 0;
             Board neighbor1 = new Board(n1, goal);
-            neighbor1.setMHPrio(moves);
             neighbors.add(neighbor1);
         }
         if (ypos!= 0){
@@ -136,7 +142,6 @@ public class Board{
             n2[xpos][ypos] = n2[xpos][ypos-1];
             n2[xpos][ypos-1] = 0;
             Board neighbor2 = new Board(n2, goal);
-            neighbor2.setMHPrio(moves);
             neighbors.add(neighbor2);
         }
         if (xpos+1 < size){
@@ -149,7 +154,6 @@ public class Board{
             n3[xpos][ypos] = n3[xpos+1][ypos];
             n3[xpos+1][ypos] = 0;
             Board neighbor3 = new Board(n3, goal);
-            neighbor3.setMHPrio(moves);
             neighbors.add(neighbor3);
         }
         if (ypos+1 < size){
@@ -162,7 +166,6 @@ public class Board{
             n4[xpos][ypos] = n4[xpos][ypos+1];
             n4[xpos][ypos+1] = 0;Board
             neighbor4 = new Board(n4, goal);
-            neighbor4.setMHPrio(moves);
             neighbors.add(neighbor4);
         }
         return neighbors;
