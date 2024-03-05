@@ -1,6 +1,8 @@
 public class Node {
     int g;
     int h;
+    int sideH;
+    int topH;
     Board nBoard;
     Node parent;
 
@@ -16,6 +18,7 @@ public class Node {
         g = parent.g+1;
         h = mh+g;
     }
+
     public boolean isGoal(){
         boolean isGoal = false;
         if (nBoard.isGoal()){

@@ -69,8 +69,8 @@ public class main {
 
         while (!pq.isEmpty()){
             current = pq.poll();
-            current.printSelf();
-            System.out.println(current.h);
+            //current.printSelf();
+            //System.out.println(current.h);
             if (current.isGoal()) {
                 current.path();
                 System.out.println("Solved in " + current.g + " moves!");
@@ -95,34 +95,21 @@ public class main {
         }
 
     static void divAndConqSolver (Board initial){
-        Node root = new Node(initial, initial.manhattan());
+        Node root = new Node(initial, initial.mhTop());
         PriorityQueue<Node> pq = new PriorityQueue<>(new mhPrioCmp());
         List <Board> n;
         Scanner scan = new Scanner(System.in);
-        int DCtop[] = new int [4];
-        int currentTop[] = new int[4];
-        int DCside [][] = new int[1][4];
-        int currentSide[][] = new int [1][4];
+
         boolean DCgoal = false;
         boolean dupe = false;
         List <Board> tried = new ArrayList<>();
         pq.add(root);
         Node current;
-        for (int i = 0; i<3; i++){
-            DCtop[i] = i+1;
-        }
-        DCside[0][0] = 1;
-        for (int i = 1; i<3; i++){
-            DCside[0][i] = i+4;
-        }
 
         while (!(pq.isEmpty())){
             current = pq.poll();
             for (int i = 0; i<3; i++) {
-                currentTop[i] = current.nBoard.tiles[0][i];
-            }
-            for (int i = 0; i<3; i++) {
-                if (Arrays.equals(DCtop, currentTop)) {
+                if (Arrays.equals(current.nBoard.topGoal, current.nBoard.currentTop)) {
                     DCgoal = true;
                     root = current;
                     break;
@@ -147,17 +134,19 @@ public class main {
             }
             tried.add(current.nBoard);
         }
-        System.out.print("Found top");
+        System.out.println("Found top");
         DCgoal = false;
-
+        if(root.parent == null){
+            root = new Node(root.nBoard, root.nBoard.mhSide());
+        }
+        else{
+            root = new Node(root.nBoard, root.nBoard.mhSide(), root.parent);
+        }
         pq.add(root);
         while (!(pq.isEmpty())){
             current = pq.poll();
             for (int i = 0; i<3; i++) {
-                currentSide[0][i] = current.nBoard.tiles[0][i];
-            }
-            for (int i = 0; i<3; i++) {
-                if (Arrays.equals(DCside, currentSide)) {
+                if (Arrays.deepEquals(current.nBoard.sideGoal, current.nBoard.currentSide)) {
                     DCgoal = true;
                     root = current;
                     break;
@@ -183,6 +172,12 @@ public class main {
             tried.add(current.nBoard);
         }
         System.out.println("Found side");
+        if(root.parent == null){
+            root = new Node(root.nBoard, root.nBoard.mhSide());
+        }
+        else{
+            root = new Node(root.nBoard, root.nBoard.mhSide(), root.parent);
+        }
         pq.add(root);
         while (!pq.isEmpty()){
             current = pq.poll();

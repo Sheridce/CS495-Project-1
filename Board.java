@@ -6,12 +6,28 @@ public class Board{
     int[][] tiles;
     private int size;
     private int[][] goal;
+    int topGoal[] = {1, 2, 3, 4};
+    int sideGoal[][] = new int [1][4];
+    int currentTop[] = new int[4];
+    int[][] currentSide = new int [1][4];
+
+
 
     //constructor
     public Board(int[][] tiles, int[][] goal){
         this.tiles = tiles;
         this.size = tiles.length;
         this.goal = goal;
+        sideGoal[0][0] = 1;
+        for (int i = 1; i<size; i++){
+            sideGoal[0][i] = goal[i][0];
+        }
+        for (int i = 0; i<size; i++){
+            currentTop [i] = tiles [0][i];
+        }
+        for (int i = 0; i < size; i++){
+            currentSide[0][i] = tiles[i][0];
+        }
 
     }
 
@@ -89,7 +105,42 @@ public class Board{
         return manhattan;
      }
      //determines the manhattan values of the top of the board
+     public int mhTop(){
+        int mhTop = 0;
+        int x0 = 0;
+        int x1 = 1;
+         for (int i = 0; i < size; i++) {
+             if ((currentTop[i] != topGoal[i]) && currentTop[i]!= 0){
+                 x1 = i+1;
+                 for (int j = 0; j < size; j++) {
+                     if(topGoal[j] == currentTop[x1-1]){
+                         x0 = j+1;
+                     }
+                 }
+                 mhTop += Math.abs(x1-x0);
+             }
+         }
+         return mhTop;
+    }
 
+    //determines the manhattan values of the left side of the board
+    public int mhSide(){
+        int mhSide = 0;
+        int y0 = 0;
+        int y1 = 0;
+        for (int i = 0; i < size; i++) {
+                if ((currentSide[0][i] != sideGoal[0][i]) && currentSide[0][i] != 0){
+                    y1 = i+1;
+                    for (int k = 0; k < size; k++) {
+                            if(sideGoal[0][k] == currentSide[0][y1-1]){
+                                y0 = k+1;
+                            }
+                        }
+                    }
+                    mhSide += Math.abs(y1-y0);
+                }
+        return mhSide;
+    }
 
      // is this board the goal board?
      public boolean isGoal(){
